@@ -1,0 +1,62 @@
+/* Basic, unobtrusive styling for honkit-plugin-tags */
+.hk-tags-container {
+  margin: 1rem 0 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+}
+
+.hk-tags-label {
+  font-weight: 600;
+  margin-right: .25rem;
+}
+
+.hk-tags-badge {
+  display: inline-block;
+  font-size: .85rem;
+  line-height: 1;
+  padding: .35rem .55rem;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  transition: all .15s ease-in-out;
+  background: rgba(0,0,0,.02);
+}
+
+.hk-tags-badge:hover {
+  transform: translateY(-1px);
+  background: rgba(0,0,0,.06);
+}
+
+.hk-style-chip {
+  border-radius: .5rem;
+}
+
+.hk-style-raw {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.hk-tags-page .hk-container {
+  max-width: 840px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.hk-tag-list, .hk-page-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.hk-tag-list li, .hk-page-list li {
+  margin: .25rem 0;
+}
+
+.hk-count {
+  opacity: .6;
+  font-size: .9em;
+}

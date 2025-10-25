@@ -1,0 +1,47 @@
+{
+  "name": "@tecknition/honkit-plugin-tags",
+  "version": "1.0.0",
+  "description": "Honkit/GitBook plugin to add tags via front matter or HTML comments, inject badges, and auto-generate tag index and per-tag pages.",
+  "main": "index.js",
+  "keywords": [
+    "honkit",
+    "gitbook",
+    "plugin",
+    "tags",
+    "frontmatter",
+    "tagging"
+  ],
+  "author": "OpenAI ChatGPT",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test",
+    "coverage": "c8 node --test"
+  },
+  "peerDependencies": {
+    "honkit": ">=4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tecknition/honkit-plugin-tags.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "c8": "^9.1.0",
+    "eslint": "^8.57.0"
+  },
+  "files": [
+    "index.js",
+    "assets",
+    "README.md",
+    "LICENSE"
+  ]
+}
