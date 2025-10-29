@@ -5,9 +5,29 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["eslint:recommended"],
+  "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2021
   },
-  "rules": {}
+  "plugins": ["complexity"],
+  "rules": {
+    "complexity": ["warn", { "max": 10 }],
+    "max-depth": ["error", { "max": 4 }],
+    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    "max-nested-callbacks": ["error", { "max": 3 }],
+    "max-params": ["warn", { "max": 4 }],
+    "no-console": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-new-func": "error",
+    "no-return-await": "error",
+    "require-await": "warn",
+    "no-throw-literal": "error",
+    "max-lines": ["error", { "max": 500, "skipBlankLines": true, "skipComments": true }]
+  }
 }

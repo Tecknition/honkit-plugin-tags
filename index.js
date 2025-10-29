@@ -50,7 +50,7 @@ function normalizeOutputPath(str) {
 
 function fallbackOutputPath(pagePath) {
   const normalized = normalizeOutputPath(pagePath);
-  if (!normalized) return '';
+  if (!normalized) {return '';}
 
   if (/README(\.[^./]+)?$/i.test(normalized)) {
     return normalized.replace(/README(\.[^./]+)?$/i, 'index.html');
@@ -60,12 +60,12 @@ function fallbackOutputPath(pagePath) {
 }
 
 function resolveOutputPath(ctx, pagePath) {
-  if (!pagePath) return '';
+  if (!pagePath) {return '';}
 
   if (ctx && ctx.output && typeof ctx.output.toURL === 'function') {
     try {
       const resolved = ctx.output.toURL(pagePath);
-      if (resolved) return normalizeOutputPath(resolved);
+      if (resolved) {return normalizeOutputPath(resolved);}
     } catch (e) {
       // swallow and fallback below
     }
@@ -77,7 +77,7 @@ function resolveOutputPath(ctx, pagePath) {
 function relativeHref(fromFile, targetPath) {
   const fromDir = path.posix.dirname(fromFile);
   const relative = path.posix.relative(fromDir, targetPath);
-  if (!relative) return path.posix.basename(targetPath);
+  if (!relative) {return path.posix.basename(targetPath);}
   return relative;
 }
 
@@ -108,12 +108,12 @@ function extractTagsFromFrontMatter(content, key) {
 
 function extractTagsFromHtmlComment(content) {
   const m = content.match(/<!--\s*tags\s*:\s*([^>]*)-->/i);
-  if (!m) return [];
+  if (!m) {return [];}
   return m[1].split(/[,|;]/).map(s => s.trim()).filter(Boolean);
 }
 
 function renderBadges(tags, pagePath, cfg) {
-  if (!tags || !tags.length) return '';
+  if (!tags || !tags.length) {return '';}
   const depth = (pagePath && pagePath.includes('/')) ? (pagePath.split('/').length - 1) : 0;
   const prefix = cfg.linkAbsolute ? '/' : '../'.repeat(depth);
   const hrefBase = `${prefix}${cfg.tagsDir.replace(/^\/+|\/+$/g,'')}/`;
@@ -161,7 +161,7 @@ ${items}
 </html>`;
 }
 
-function renderTagPage(tag, pages, cfg) {
+function renderTagPage(tag, pages, _cfg) {
   const items = pages.map(p => `<li><a href="${escapeHtml(p.href)}">${escapeHtml(p.title)}</a></li>`).join('\n');
   const title = `Tag: ${tag}`;
   return `<!doctype html>
@@ -204,14 +204,14 @@ module.exports = {
       // Parse front matter tags and strip it from content so it doesn't render
       const fm = extractTagsFromFrontMatter(withoutOld, cfg.frontMatterKey);
       let tags = fm.tags;
-      let content = fm.content;
+      const content = fm.content;
 
       // Fallback: allow a simple HTML comment form anywhere in the page
       tags = uniq([ ...tags, ...extractTagsFromHtmlComment(content) ])
         .map(t => String(t).trim())
         .filter(Boolean);
 
-      if (tags.length) pageTagsMap.set(page.path, tags);
+      if (tags.length) {pageTagsMap.set(page.path, tags);}
 
       // Inject badges
       const badges = renderBadges(tags, page.path, cfg);
@@ -235,7 +235,7 @@ module.exports = {
       pageTagsMap.forEach((tags, p) => {
         tags.forEach(t => {
           const key = String(t);
-          if (!tagToPages.has(key)) tagToPages.set(key, []);
+          if (!tagToPages.has(key)) {tagToPages.set(key, []);}
           tagToPages.get(key).push({ title: pageTitleMap.get(p) || p, path: p });
         });
       });
