@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+
+# Run quality checks before commit
+echo "🔍 Running pre-commit quality checks..."
+
+# Format code
+npm run format
+
+# Lint and fix issues
+npm run lint:fix
+
+# Run tests
+npm test
+
+echo "✅ Pre-commit checks passed!"
