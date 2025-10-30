@@ -13,7 +13,10 @@
   "rules": {
     "complexity": ["warn", { "max": 10 }],
     "max-depth": ["error", { "max": 4 }],
-    "max-lines-per-function": ["warn", { "max": 50, "skipBlankLines": true, "skipComments": true }],
+    "max-lines-per-function": [
+      "warn",
+      { "max": 50, "skipBlankLines": true, "skipComments": true }
+    ],
     "max-nested-callbacks": ["error", { "max": 3 }],
     "max-params": ["warn", { "max": 4 }],
     "no-console": "off",
@@ -28,6 +31,9 @@
     "no-return-await": "error",
     "require-await": "warn",
     "no-throw-literal": "error",
-    "max-lines": ["error", { "max": 500, "skipBlankLines": true, "skipComments": true }]
+    "max-lines": [
+      "error",
+      { "max": 500, "skipBlankLines": true, "skipComments": true }
+    ]
   }
 }
