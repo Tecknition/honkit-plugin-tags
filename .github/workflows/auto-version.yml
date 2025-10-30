@@ -59,13 +59,16 @@ jobs:
           # Bump version
           npm version ${{ steps.version-type.outputs.bump }} --no-git-tag-version
           
+          # Format all files after version bump
+          npm run format
+          
           # Get new version
           NEW_VERSION=$(node -p "require('./package.json').version")
           echo "New version: $NEW_VERSION"
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           
-          # Commit version bump
-          git add package.json package-lock.json
+          # Commit version bump and formatted files
+          git add -A
           git commit -m "chore(release): bump version to $NEW_VERSION [skip ci]"
           git push
 
