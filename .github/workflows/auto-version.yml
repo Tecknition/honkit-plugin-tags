@@ -1,0 +1,87 @@
+name: Auto Version & Publish
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  auto-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          cache: npm
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine version bump type
+        id: version-type
+        run: |
+          # Get the latest commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          
+          # Check for breaking change or major version indicators
+          if echo "$COMMIT_MSG" | grep -qiE "BREAKING CHANGE|major:"; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          # Check for feature or minor version indicators  
+          elif echo "$COMMIT_MSG" | grep -qiE "^feat|^feature|minor:"; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          # Default to patch for fixes, chores, docs, etc.
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        id: version
+        run: |
+          # Get current version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+          
+          # Bump version
+          npm version ${{ steps.version-type.outputs.bump }} --no-git-tag-version
+          
+          # Get new version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          
+          # Commit version bump
+          git add package.json package-lock.json
+          git commit -m "chore(release): bump version to $NEW_VERSION [skip ci]"
+          git push
+
+      - name: Run tests
+        run: npm test
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.version.outputs.version }}" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --notes "Automated release for version ${{ steps.version.outputs.version }}" \
+            --latest
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
