@@ -56,6 +56,7 @@ tags: [api, auth, jwt]
 ---
 
 # My Page
+
 Content goes here…
 ```
 
@@ -79,7 +80,7 @@ Place this anywhere in the page:
 
 ## What the plugin does
 
-1. Parses front matter / comment to collect tags for each page.  
+1. Parses front matter / comment to collect tags for each page.
 2. Injects tag badges at the **bottom** (or top) of each page, e.g.
 
 ```
@@ -106,17 +107,17 @@ Feel free to override styles in your theme.
 
 ## Options
 
-| Option            | Type    | Default   | Description |
-|-------------------|---------|-----------|-------------|
-| `frontMatterKey`  | string  | `tags`    | Key name to read from YAML front matter. |
-| `injectPosition`  | string  | `bottom`  | `"top"` or `"bottom"` injection of badges. |
-| `linkAbsolute`    | boolean | `false`   | Use absolute `/tags/...` links instead of relative links. |
-| `indexTitle`      | string  | `Tags`    | Title for the tag index page. |
-| `tagsDir`         | string  | `tags`    | Directory (under site root) for generated tag pages. |
-| `tagIndexFilename`| string  | `index.html` | Filename for the tag index page. |
-| `showCount`       | boolean | `true`    | Show per-tag page counts in the index. |
-| `badgeStyle`      | string  | `pill`    | One of `pill`, `chip`, or `raw`. |
-| `lowercaseSlugs`  | boolean | `true`    | Lowercase tag slugs for generated filenames. |
+| Option             | Type    | Default      | Description                                               |
+| ------------------ | ------- | ------------ | --------------------------------------------------------- |
+| `frontMatterKey`   | string  | `tags`       | Key name to read from YAML front matter.                  |
+| `injectPosition`   | string  | `bottom`     | `"top"` or `"bottom"` injection of badges.                |
+| `linkAbsolute`     | boolean | `false`      | Use absolute `/tags/...` links instead of relative links. |
+| `indexTitle`       | string  | `Tags`       | Title for the tag index page.                             |
+| `tagsDir`          | string  | `tags`       | Directory (under site root) for generated tag pages.      |
+| `tagIndexFilename` | string  | `index.html` | Filename for the tag index page.                          |
+| `showCount`        | boolean | `true`       | Show per-tag page counts in the index.                    |
+| `badgeStyle`       | string  | `pill`       | One of `pill`, `chip`, or `raw`.                          |
+| `lowercaseSlugs`   | boolean | `true`       | Lowercase tag slugs for generated filenames.              |
 
 ---
 
