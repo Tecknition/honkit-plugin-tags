@@ -1,21 +1,21 @@
 /* eslint-env node */
-'use strict';
+"use strict";
 
-const path = require('path');
-const matter = require('gray-matter');
+const path = require("path");
+const matter = require("gray-matter");
 
-const START_MARK = '<!-- TAGS-PLUGIN:START -->';
-const END_MARK = '<!-- TAGS-PLUGIN:END -->';
+const START_MARK = "<!-- TAGS-PLUGIN:START -->";
+const END_MARK = "<!-- TAGS-PLUGIN:END -->";
 
 const defaultConfig = {
-  frontMatterKey: 'tags',
-  injectPosition: 'bottom', // 'top' | 'bottom'
+  frontMatterKey: "tags",
+  injectPosition: "bottom", // 'top' | 'bottom'
   linkAbsolute: false, // if true, use "/tags/<slug>.html" links
-  indexTitle: 'Tags',
-  tagsDir: 'tags',
-  tagIndexFilename: 'index.html',
+  indexTitle: "Tags",
+  tagsDir: "tags",
+  tagIndexFilename: "index.html",
   showCount: true,
-  badgeStyle: 'pill', // 'pill' | 'chip' | 'raw'
+  badgeStyle: "pill", // 'pill' | 'chip' | 'raw'
   lowercaseSlugs: true,
 };
 
@@ -30,46 +30,46 @@ function slugify(str, lowercase) {
   const s = lowercase ? String(str).toLowerCase() : String(str);
   return s
     .trim()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function escapeHtml(s) {
   return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function normalizeOutputPath(str) {
-  return String(str || '')
-    .replace(/\\/g, '/')
-    .replace(/^\/+/, '');
+  return String(str || "")
+    .replace(/\\/g, "/")
+    .replace(/^\/+/, "");
 }
 
 function fallbackOutputPath(pagePath) {
   const normalized = normalizeOutputPath(pagePath);
   if (!normalized) {
-    return '';
+    return "";
   }
 
   if (/README(\.[^./]+)?$/i.test(normalized)) {
-    return normalized.replace(/README(\.[^./]+)?$/i, 'index.html');
+    return normalized.replace(/README(\.[^./]+)?$/i, "index.html");
   }
 
-  return normalized.replace(/\.[^./]+$/, '.html');
+  return normalized.replace(/\.[^./]+$/, ".html");
 }
 
 function resolveOutputPath(ctx, pagePath) {
   if (!pagePath) {
-    return '';
+    return "";
   }
 
-  if (ctx && ctx.output && typeof ctx.output.toURL === 'function') {
+  if (ctx && ctx.output && typeof ctx.output.toURL === "function") {
     try {
       const resolved = ctx.output.toURL(pagePath);
       if (resolved) {
@@ -97,11 +97,14 @@ function getPluginConfig(ctx) {
     const root =
       ctx && ctx.config
         ? ctx.config.get
-          ? ctx.config.get('pluginsConfig')
+          ? ctx.config.get("pluginsConfig")
           : ctx.config.values && ctx.config.values.pluginsConfig
         : null;
     // allow both "honkit-plugin-tags" and "tags" keys for convenience
-    return Object.assign({}, root && (root['honkit-plugin-tags'] || root['tags'] || {}));
+    return Object.assign(
+      {},
+      root && (root["honkit-plugin-tags"] || root["tags"] || {}),
+    );
   } catch (e) {
     return {};
   }
@@ -114,7 +117,7 @@ function extractTagsFromFrontMatter(content, key) {
   const raw = data[key];
   if (Array.isArray(raw)) {
     tags = raw;
-  } else if (typeof raw === 'string') {
+  } else if (typeof raw === "string") {
     tags = raw
       .split(/[,|;]/)
       .map((s) => s.trim())
@@ -136,18 +139,19 @@ function extractTagsFromHtmlComment(content) {
 
 function renderBadges(tags, pagePath, cfg) {
   if (!tags || !tags.length) {
-    return '';
+    return "";
   }
-  const depth = pagePath && pagePath.includes('/') ? pagePath.split('/').length - 1 : 0;
-  const prefix = cfg.linkAbsolute ? '/' : '../'.repeat(depth);
-  const hrefBase = `${prefix}${cfg.tagsDir.replace(/^\/+|\/+$/g, '')}/`;
+  const depth =
+    pagePath && pagePath.includes("/") ? pagePath.split("/").length - 1 : 0;
+  const prefix = cfg.linkAbsolute ? "/" : "../".repeat(depth);
+  const hrefBase = `${prefix}${cfg.tagsDir.replace(/^\/+|\/+$/g, "")}/`;
 
   const badges = tags
     .map((t) => {
       const slug = slugify(t, cfg.lowercaseSlugs);
       return `<a class="hk-tags-badge hk-style-${cfg.badgeStyle}" href="${hrefBase}${slug}.html">${escapeHtml(t)}</a>`;
     })
-    .join(' ');
+    .join(" ");
 
   return `
 
@@ -166,10 +170,12 @@ function renderIndexPage(tagToPages, cfg) {
     .map((t) => {
       const slug = slugify(t, cfg.lowercaseSlugs);
       const count = tagToPages.get(t).length;
-      const countHtml = cfg.showCount ? ` <span class="hk-count">(${count})</span>` : '';
+      const countHtml = cfg.showCount
+        ? ` <span class="hk-count">(${count})</span>`
+        : "";
       return `<li><a href="${slug}.html">${escapeHtml(t)}</a>${countHtml}</li>`;
     })
-    .join('\n');
+    .join("\n");
   return `<!doctype html>
 <html>
 <head>
@@ -186,7 +192,7 @@ function renderIndexPage(tagToPages, cfg) {
         ? `<ul class="hk-tag-list">
 ${items}
 </ul>`
-        : '<p>No tags found.</p>'
+        : "<p>No tags found.</p>"
     }
   </main>
 </body>
@@ -195,8 +201,11 @@ ${items}
 
 function renderTagPage(tag, pages, _cfg) {
   const items = pages
-    .map((p) => `<li><a href="${escapeHtml(p.href)}">${escapeHtml(p.title)}</a></li>`)
-    .join('\n');
+    .map(
+      (p) =>
+        `<li><a href="${escapeHtml(p.href)}">${escapeHtml(p.title)}</a></li>`,
+    )
+    .join("\n");
   const title = `Tag: ${tag}`;
   return `<!doctype html>
 <html>
@@ -214,7 +223,7 @@ function renderTagPage(tag, pages, _cfg) {
         ? `<ul class="hk-page-list">
 ${items}
 </ul>`
-        : '<p>No pages for this tag.</p>'
+        : "<p>No pages for this tag.</p>"
     }
     <p><a href="index.html">← All tags</a></p>
   </main>
@@ -224,22 +233,22 @@ ${items}
 
 module.exports = {
   book: {
-    assets: './assets',
-    css: ['tags.css'],
+    assets: "./assets",
+    css: ["tags.css"],
   },
   hooks: {
     init: function () {
       pageTagsMap = new Map();
       pageTitleMap = new Map();
     },
-    'page:before': function (page) {
+    "page:before": function (page) {
       const cfg = Object.assign({}, defaultConfig, getPluginConfig(this));
 
-      const original = page.content || '';
+      const original = page.content || "";
       // Remove prior injected tag blocks to avoid duplication on rebuilds
       const withoutOld = original.replace(
-        new RegExp(`\\n?${START_MARK}[\\s\\S]*?${END_MARK}\\n?`, 'g'),
-        ''
+        new RegExp(`\\n?${START_MARK}[\\s\\S]*?${END_MARK}\\n?`, "g"),
+        "",
       );
 
       // Parse front matter tags and strip it from content so it doesn't render
@@ -258,7 +267,8 @@ module.exports = {
 
       // Inject badges
       const badges = renderBadges(tags, page.path, cfg);
-      page.content = cfg.injectPosition === 'top' ? badges + content : content + badges;
+      page.content =
+        cfg.injectPosition === "top" ? badges + content : content + badges;
 
       return page;
     },
@@ -279,15 +289,19 @@ module.exports = {
           if (!tagToPages.has(key)) {
             tagToPages.set(key, []);
           }
-          tagToPages.get(key).push({ title: pageTitleMap.get(p) || p, path: p });
+          tagToPages
+            .get(key)
+            .push({ title: pageTitleMap.get(p) || p, path: p });
         });
       });
 
       // Sort pages within each tag
-      tagToPages.forEach((list) => list.sort((a, b) => a.title.localeCompare(b.title)));
+      tagToPages.forEach((list) =>
+        list.sort((a, b) => a.title.localeCompare(b.title)),
+      );
 
-      const tagsDir = cfg.tagsDir.replace(/^\/+|\/+$/g, '');
-      const tagsBase = tagsDir || '.';
+      const tagsDir = cfg.tagsDir.replace(/^\/+|\/+$/g, "");
+      const tagsBase = tagsDir || ".";
       const indexPath = path.posix.join(tagsBase, cfg.tagIndexFilename);
 
       const indexHtml = renderIndexPage(tagToPages, cfg);
@@ -302,7 +316,7 @@ module.exports = {
             const file = path.posix.join(tagsBase, `${slug}.html`);
             const targetPages = (tagToPages.get(tag) || []).map((page) => {
               const outputPath = resolveOutputPath(that, page.path);
-              const href = outputPath ? relativeHref(file, outputPath) : '#';
+              const href = outputPath ? relativeHref(file, outputPath) : "#";
               return { title: page.title, href };
             });
             const html = renderTagPage(tag, targetPages, cfg);
